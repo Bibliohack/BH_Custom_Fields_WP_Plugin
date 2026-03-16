@@ -1,0 +1,137 @@
+{
+  "post": [
+    {
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "type": "text",
+      "mode": "plain",
+      "description": "Un subtítulo breve para el post"
+    },
+    {
+      "id": "additional_content",
+      "label": "Contenido Adicional",
+      "type": "text",
+      "mode": "html",
+      "description": "Contenido HTML adicional"
+    },
+    {
+      "id": "related_post",
+      "label": "Post Relacionado",
+      "type": "related",
+      "related_type": "post",
+      "description": "Selecciona un post relacionado"
+    },
+    {
+      "id": "featured_image_2",
+      "label": "Imagen Destacada Secundaria",
+      "type": "media",
+      "media_type": "image",
+      "description": "Una segunda imagen destacada (JPG, PNG, GIF, WebP, SVG)"
+    },
+    {
+      "id": "galeria",
+      "label": "Galería de Imágenes",
+      "type": "media",
+      "media_type": "image",
+      "multiple": true,
+      "max_items": 10,
+      "description": "Galería con hasta 10 imágenes"
+    },
+    {
+      "id": "video_destacado",
+      "label": "Video Destacado",
+      "type": "media",
+      "media_type": "video",
+      "description": "Video principal (MP4, WebM, OGG, AVI, MOV)"
+    }
+  ],
+  "page": [
+    {
+      "id": "banner_text",
+      "label": "Texto del Banner",
+      "type": "text",
+      "mode": "plain"
+    },
+    {
+      "id": "banner_image",
+      "label": "Imagen del Banner",
+      "type": "media",
+      "media_type": "image"
+    },
+    {
+      "id": "pdf_descargable",
+      "label": "PDF Descargable",
+      "type": "media",
+      "media_type": "document",
+      "description": "Documento para descarga (PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT)"
+    },
+    {
+      "id": "secciones",
+      "label": "Secciones de Contenido",
+      "type": "text",
+      "mode": "html",
+      "multiple": true,
+      "max_items": 5,
+      "description": "Hasta 5 secciones de contenido HTML"
+    }
+  ],
+  "producto": [
+    {
+      "id": "precio",
+      "label": "Precio",
+      "type": "text",
+      "mode": "plain"
+    },
+    {
+      "id": "caracteristicas",
+      "label": "Características",
+      "type": "text",
+      "mode": "plain",
+      "multiple": true,
+      "max_items": 15,
+      "description": "Lista de características (hasta 15)"
+    },
+    {
+      "id": "productos_relacionados",
+      "label": "Productos Relacionados",
+      "type": "related",
+      "related_type": "producto",
+      "multiple": true,
+      "max_items": 6,
+      "description": "Hasta 6 productos relacionados"
+    },
+    {
+      "id": "imagen_principal",
+      "label": "Imagen Principal",
+      "type": "media",
+      "media_type": "image"
+    },
+    {
+      "id": "galeria_producto",
+      "label": "Galería del Producto",
+      "type": "media",
+      "media_type": "image",
+      "multiple": true,
+      "max_items": 8,
+      "description": "Hasta 8 imágenes en la galería"
+    },
+    {
+      "id": "videos_producto",
+      "label": "Videos del Producto",
+      "type": "media",
+      "media_type": "video",
+      "multiple": true,
+      "max_items": 3,
+      "description": "Hasta 3 videos"
+    },
+    {
+      "id": "manuales",
+      "label": "Manuales y Documentos",
+      "type": "media",
+      "media_type": "document",
+      "multiple": true,
+      "max_items": 5,
+      "description": "Hasta 5 documentos"
+    }
+  ]
+}
