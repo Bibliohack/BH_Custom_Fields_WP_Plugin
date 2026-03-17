@@ -272,7 +272,7 @@ class BHCustomFieldsManager {
             $json_indexed = array_column($json_fields, null, 'id');
 
             // Campos en BD: detectar eliminados, cambios de tipo, cambios de label
-            $force_enabled = get_option('bhcf_fields_force_enabled', []);
+            $force_enabled = get_option('bh_fields_force_enabled', []);
             if (!is_array($force_enabled)) $force_enabled = [];
 
             foreach ($bd_indexed as $field_id => $bd_field) {
@@ -668,7 +668,7 @@ class BHCustomFieldsManager {
         update_option('bh_json_hash', md5_file($json_file));
         update_option('bh_last_sync', current_time('mysql'));
         update_option('bh_fields_disabled', []);
-        update_option('bhcf_fields_force_enabled', []);
+        update_option('bh_fields_force_enabled', []);
 
         wp_send_json_success(['message' => 'Configuración actualizada correctamente.']);
     }
@@ -787,10 +787,10 @@ class BHCustomFieldsManager {
         update_option('bh_fields_disabled', $disabled);
 
         // Registrar como forzado (para auditoría)
-        $force_enabled = get_option('bhcf_fields_force_enabled', []);
+        $force_enabled = get_option('bh_fields_force_enabled', []);
         if (!in_array($field_id, $force_enabled)) {
             $force_enabled[] = $field_id;
-            update_option('bhcf_fields_force_enabled', $force_enabled);
+            update_option('bh_fields_force_enabled', $force_enabled);
         }
 
         wp_send_json_success(['message' => "Campo '{$field_id}' forzado a activo."]);
@@ -1709,7 +1709,7 @@ function bh_custom_fields_uninstall() {
         'bh_last_sync',
         'bh_fields_disabled',
         'bh_fields_conflicts',
-        'bhcf_fields_force_enabled',
+        'bh_fields_force_enabled',
     ];
     foreach ($options as $option) {
         delete_option($option);
