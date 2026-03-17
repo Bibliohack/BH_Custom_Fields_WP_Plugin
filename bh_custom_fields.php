@@ -168,6 +168,18 @@ class BHCustomFieldsManager {
             } else {
                 $json_content = file_get_contents($json_file);
                 $json_config  = json_decode($json_content, true);
+
+                if (json_last_error() !== JSON_ERROR_NONE || !is_array($json_config)) {
+                    ?>
+                    <div class="notice notice-error">
+                        <p><strong>⛔ Error en el archivo JSON:</strong>
+                        <?php echo esc_html(json_last_error_msg()); ?></p>
+                        <p>Corregí el archivo <code>bh-custom-fields-config.json</code> y recargá esta página.</p>
+                    </div>
+                    <?php
+                    return;
+                }
+
                 $bd_config    = get_option('bh_fields_current', []);
                 $analysis     = $this->analyze_changes($bd_config, $json_config);
                 $has_conflicts = !empty($analysis['conflicts']);
