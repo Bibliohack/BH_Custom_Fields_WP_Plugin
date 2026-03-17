@@ -18,6 +18,7 @@ class BHCustomFieldsManager {
         add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
         add_action('admin_menu', [$this, 'add_admin_menu']);
         add_action('admin_init', [$this, 'check_json_changes']);
+        add_action('admin_init', [$this, 'handle_settings_save']);
         add_action('wp_ajax_bhcf_apply_config',     [$this, 'ajax_apply_config']);
         add_action('wp_ajax_bhcf_view_posts',       [$this, 'ajax_view_posts']);
         add_action('wp_ajax_bhcf_export_data',      [$this, 'ajax_export_data']);
@@ -56,6 +57,19 @@ class BHCustomFieldsManager {
             update_option('bh_last_sync', current_time('mysql'));
             $this->fields_config = $config;
         }
+    }
+
+    public function handle_settings_save() {
+        if (!isset($_POST['bh_fields_action']) || $_POST['bh_fields_action'] !== 'save_settings') {
+            return;
+        }
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+        check_admin_referer('bh_fields_settings', 'bh_fields_settings_nonce');
+        update_option('bh_fields_delete_on_uninstall', !empty($_POST['bh_delete_on_uninstall']));
+        wp_redirect(admin_url('admin.php?page=bh-fields-sync&settings_saved=1'));
+        exit;
     }
 
     public function check_json_changes() {
@@ -215,6 +229,38 @@ class BHCustomFieldsManager {
                 <?php
             }
             ?>
+
+            <hr style="margin: 40px 0;">
+
+            <?php if (isset($_GET['settings_saved'])): ?>
+            <div class="notice notice-success is-dismissible"><p>✅ Configuración guardada.</p></div>
+            <?php endif; ?>
+
+            <div class="card">
+                <h2>⚙️ Configuración del plugin</h2>
+                <form method="post">
+                    <input type="hidden" name="bh_fields_action" value="save_settings">
+                    <?php wp_nonce_field('bh_fields_settings', 'bh_fields_settings_nonce'); ?>
+                    <table class="form-table" style="margin: 0;">
+                        <tr>
+                            <th style="width: 200px; padding: 8px 0;">Al desinstalar el plugin:</th>
+                            <td style="padding: 8px 0;">
+                                <label>
+                                    <input type="checkbox" name="bh_delete_on_uninstall" value="1"
+                                        <?php checked(get_option('bh_fields_delete_on_uninstall', false)); ?>>
+                                    Eliminar todos los datos guardados en la base de datos
+                                    <br><small style="color: #777; margin-top: 4px; display: block;">
+                                        Si está desmarcado, al eliminar el plugin se borran solo las opciones
+                                        de configuración pero se conservan los datos guardados en los posts
+                                        (<code>wp_postmeta</code>).
+                                    </small>
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                    <p><button type="submit" class="button">Guardar configuración</button></p>
+                </form>
+            </div>
 
             <hr style="margin: 40px 0;">
 
@@ -1690,14 +1736,14 @@ register_uninstall_hook(__FILE__, 'bh_custom_fields_uninstall');
 function bh_custom_fields_uninstall() {
     global $wpdb;
 
-    // Leer config antes de borrarla para obtener los field IDs
-    $config = get_option('bh_fields_current', []);
-
-    // Eliminar post meta de todos los campos registrados
-    foreach ($config as $post_type => $fields) {
-        foreach ($fields as $field) {
-            if (!empty($field['id'])) {
-                $wpdb->delete($wpdb->postmeta, ['meta_key' => $field['id']]);
+    // Eliminar datos de posts solo si el usuario lo eligió explícitamente
+    if (get_option('bh_fields_delete_on_uninstall', false)) {
+        $config = get_option('bh_fields_current', []);
+        foreach ($config as $post_type => $fields) {
+            foreach ($fields as $field) {
+                if (!empty($field['id'])) {
+                    $wpdb->delete($wpdb->postmeta, ['meta_key' => $field['id']]);
+                }
             }
         }
     }
@@ -1710,6 +1756,7 @@ function bh_custom_fields_uninstall() {
         'bh_fields_disabled',
         'bh_fields_conflicts',
         'bh_fields_force_enabled',
+        'bh_fields_delete_on_uninstall',
     ];
     foreach ($options as $option) {
         delete_option($option);
