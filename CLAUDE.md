@@ -79,6 +79,7 @@ Si hay **cualquier** conflicto pendiente, no se puede aplicar ningún cambio. El
 | `choice` | `display: "select"` o `"radio"`, `options: {}` |
 | `related` | `related_type: "post"/"page"/CPT` |
 | `media` | `media_type: "image"/"video"/"document"` |
+| `date` | — (date picker nativo, guarda `YYYY-MM-DD`) |
 
 Todos soportan `"multiple": true` + `"max_items": N`.
 
