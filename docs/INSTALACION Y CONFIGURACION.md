@@ -88,6 +88,18 @@ El archivo `bh-custom-fields-config.json` define todos los campos. Está organiz
 ```
 - `media_type`: `"image"`, `"video"` o `"document"`
 
+### date
+```json
+{ "id": "fecha_evento", "label": "Fecha del evento", "type": "date" }
+```
+- Muestra un date picker nativo del navegador
+- El valor se guarda en formato `YYYY-MM-DD`
+- Para mostrar en templates, formatear con `date_i18n()`:
+```php
+$fecha = bhack_get_custom_field('fecha_evento');
+if ($fecha) echo date_i18n(get_option('date_format'), strtotime($fecha));
+```
+
 ---
 
 ## 🔢 Campos múltiples

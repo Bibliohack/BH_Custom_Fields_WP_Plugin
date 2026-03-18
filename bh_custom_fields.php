@@ -1223,11 +1223,14 @@ class BHCustomFieldsManager {
             case 'media':
                 $this->render_media_field($single_field, $value, true);
                 break;
+            case 'date':
+                $this->render_date_field($single_field, $value, true);
+                break;
         }
-        
+
         echo '</div>';
     }
-    
+
     private function render_field($field, $value, $post_id) {
         echo '<div class="custom-field-wrapper" style="margin-bottom: 20px;">';
         echo '<label style="display: block; font-weight: bold; margin-bottom: 5px;">';
@@ -1250,8 +1253,11 @@ class BHCustomFieldsManager {
             case 'media':
                 $this->render_media_field($field, $value);
                 break;
+            case 'date':
+                $this->render_date_field($field, $value);
+                break;
         }
-        
+
         if (!empty($field['description'])) {
             echo '<p class="description">' . esc_html($field['description']) . '</p>';
         }
@@ -1367,6 +1373,11 @@ class BHCustomFieldsManager {
         echo '</select>';
     }
     
+    private function render_date_field($field, $value, $is_multiple = false) {
+        $name = esc_attr($field['id']);
+        echo '<input type="date" name="' . $name . '" value="' . esc_attr($value) . '" style="width: 200px;">';
+    }
+
     private function render_media_field($field, $value, $is_multiple = false) {
         $name = esc_attr($field['id']);
         $media_type = $field['media_type'] ?? 'image';

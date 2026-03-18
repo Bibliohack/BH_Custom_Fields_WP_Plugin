@@ -9,7 +9,7 @@ Plugin de WordPress para gestión de campos personalizados mediante configuraci�
 - Detecta automáticamente cambios en el JSON y notifica al administrador
 - Sistema de sincronización controlada: los cambios no se aplican automáticamente
 - Previene pérdida de datos al cambiar o eliminar campos con contenido existente
-- Tipos de campo: `text` (plain/html), `bool`, `choice` (select/radio), `related`, `media`
+- Tipos de campo: `text` (plain/html), `bool`, `choice` (select/radio), `related`, `media`, `date`
 - Soporte para campos múltiples (`"multiple": true`)
 - Funciones helper para usar en templates PHP
 
