@@ -81,6 +81,27 @@ El archivo `bh-custom-fields-config.json` define todos los campos. Está organiz
 { "id": "post_relacionado", "label": "Post relacionado", "type": "related", "related_type": "post" }
 ```
 - `related_type`: `"post"`, `"page"` o slug de cualquier CPT
+- `display`: `"select"` (dropdown estático, por defecto) o `"autocomplete"` (ver abajo)
+
+#### display: "autocomplete"
+
+```json
+{
+  "id": "autor",
+  "label": "Autor",
+  "type": "related",
+  "related_type": "autor",
+  "display": "autocomplete"
+}
+```
+
+Muestra un input de texto con búsqueda AJAX en tiempo real (debounce 250ms). Al escribir aparece un dropdown con sugerencias de posts existentes del `related_type` especificado.
+
+**Comportamiento al guardar:**
+- Si el usuario seleccionó una sugerencia → se guarda el ID del post existente (igual que `select`)
+- Si el usuario escribió un nombre que no existe → se crea automáticamente un nuevo post de tipo `related_type` con ese título en estado `publish`, y se guarda su ID
+
+Este comportamiento es equivalente al de las categorías de WordPress: si no existe, se crea al guardar.
 
 ### media
 ```json

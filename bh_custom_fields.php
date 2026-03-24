@@ -25,6 +25,7 @@ class BHCustomFieldsManager {
         add_action('wp_ajax_bhcf_delete_field_data',[$this, 'ajax_delete_field_data']);
         add_action('wp_ajax_bhcf_force_enable',     [$this, 'ajax_force_enable']);
         add_action('wp_ajax_bhcf_show_old_config',  [$this, 'ajax_show_old_config']);
+        add_action('wp_ajax_bhcf_search_related',   [$this, 'ajax_search_related']);
     }
     
     public function get_fields_config() {
@@ -434,6 +435,21 @@ class BHCustomFieldsManager {
                         'new_description' => $json_field['description'] ?? '',
                     ];
                 }
+
+                // Cambio en otras propiedades de configuración (display, mode, related_type,
+                // media_type, checkbox_label, multiple, max_items, etc.) — siempre seguro
+                $skip = ['label', 'description', 'options'];
+                $bd_other   = array_diff_key($bd_field,   array_flip($skip));
+                $json_other = array_diff_key($json_field, array_flip($skip));
+                if ($bd_other !== $json_other) {
+                    $safe_changes[] = [
+                        'type'       => 'config_changed',
+                        'post_type'  => $post_type,
+                        'field_id'   => $field_id,
+                        'old_config' => $bd_field,
+                        'new_config' => $json_field,
+                    ];
+                }
             }
 
             // Campos en JSON pero no en BD: son nuevos (seguros)
@@ -507,6 +523,7 @@ class BHCustomFieldsManager {
                 'label_changed'  => '✏️ Label / descripción',
                 'options_added'  => '➕ Opciones agregadas',
                 'option_removed' => '➖ Opción eliminada (sin datos)',
+                'config_changed' => '⚙️ Configuración de campo',
             ];
 
             echo '<div class="card" style="border-left: 4px solid #00a32a;">';
@@ -530,6 +547,28 @@ class BHCustomFieldsManager {
                 } elseif ($c['type'] === 'new_field') {
                     $type = $c['new_config']['type'] ?? '?';
                     echo '<td>Tipo: <code>' . esc_html($type) . '</code></td>';
+                } elseif ($c['type'] === 'config_changed') {
+                    $old = $c['old_config'];
+                    $new = $c['new_config'];
+                    $diffs = [];
+                    $skip  = ['label', 'description', 'options'];
+                    foreach ($new as $k => $v) {
+                        if (in_array($k, $skip)) continue;
+                        $old_v = $old[$k] ?? null;
+                        if ($old_v !== $v) {
+                            $diffs[] = '<code>' . esc_html($k) . '</code>: '
+                                . esc_html(is_bool($old_v) ? ($old_v ? 'true' : 'false') : (string)($old_v ?? '—'))
+                                . ' → '
+                                . esc_html(is_bool($v) ? ($v ? 'true' : 'false') : (string)$v);
+                        }
+                    }
+                    foreach ($old as $k => $v) {
+                        if (in_array($k, $skip) || isset($new[$k])) continue;
+                        $diffs[] = '<code>' . esc_html($k) . '</code>: '
+                            . esc_html(is_bool($v) ? ($v ? 'true' : 'false') : (string)$v)
+                            . ' → —';
+                    }
+                    echo '<td>' . implode(', ', $diffs) . '</td>';
                 } else {
                     echo '<td>—</td>';
                 }
@@ -865,6 +904,25 @@ class BHCustomFieldsManager {
         }
 
         wp_send_json_success(['config' => $field_config]);
+    }
+
+    public function ajax_search_related() {
+        if (!current_user_can('edit_posts')) wp_die();
+
+        $related_type = sanitize_key($_GET['related_type'] ?? 'post');
+        $search       = sanitize_text_field($_GET['q'] ?? '');
+
+        $posts = get_posts([
+            'post_type'      => $related_type,
+            'posts_per_page' => 20,
+            'orderby'        => 'title',
+            'order'          => 'ASC',
+            's'              => $search,
+            'post_status'    => 'publish',
+        ]);
+
+        $results = array_map(fn($p) => ['id' => $p->ID, 'title' => $p->post_title], $posts);
+        wp_send_json_success($results);
     }
 
     // -------------------------------------------------------------------------
@@ -1350,26 +1408,41 @@ class BHCustomFieldsManager {
     private function render_related_field($field, $value, $is_multiple = false) {
         $related_type = $field['related_type'] ?? 'post';
         $name = esc_attr($field['id']);
-        
+        $display = $field['display'] ?? 'select';
+
+        if ($display === 'autocomplete') {
+            $current_title = '';
+            if ($value && is_numeric($value)) {
+                $post = get_post((int) $value);
+                if ($post) $current_title = $post->post_title;
+            }
+            echo '<div class="bhcf-autocomplete-wrapper" data-related-type="' . esc_attr($related_type) . '">';
+            echo '<input type="text" class="bhcf-autocomplete-text" placeholder="Escribir para buscar..." value="' . esc_attr($current_title) . '" style="width: 100%;" autocomplete="off">';
+            echo '<input type="hidden" name="' . $name . '" class="bhcf-autocomplete-id" value="' . esc_attr($value) . '">';
+            echo '<div class="bhcf-autocomplete-dropdown" style="display:none; position:absolute; z-index:9999; background:#fff; border:1px solid #ccc; width:100%; max-height:200px; overflow-y:auto;"></div>';
+            echo '</div>';
+            return;
+        }
+
         $args = [
             'post_type' => $related_type,
             'posts_per_page' => -1,
             'orderby' => 'title',
             'order' => 'ASC',
         ];
-        
+
         $posts = get_posts($args);
-        
+
         echo '<select name="' . $name . '" style="width: 100%;">';
         echo '<option value="">-- Seleccionar --</option>';
-        
+
         foreach ($posts as $post) {
             $selected = selected($value, $post->ID, false);
             echo '<option value="' . esc_attr($post->ID) . '" ' . $selected . '>';
             echo esc_html($post->post_title);
             echo '</option>';
         }
-        
+
         echo '</select>';
     }
     
@@ -1465,10 +1538,19 @@ class BHCustomFieldsManager {
                             } else {
                                 $value = sanitize_text_field($value);
                             }
+                        } elseif ($field['type'] === 'related' && !empty($value) && !is_numeric($value)) {
+                            $title = sanitize_text_field($value);
+                            $related_type = $field['related_type'] ?? 'post';
+                            $new_id = wp_insert_post([
+                                'post_title'  => $title,
+                                'post_type'   => $related_type,
+                                'post_status' => 'publish',
+                            ]);
+                            $value = is_wp_error($new_id) ? '' : $new_id;
                         } else {
                             $value = sanitize_text_field($value);
                         }
-                        
+
                         update_post_meta($post_id, $field_id, $value);
                     }
                 } else {
@@ -1606,6 +1688,67 @@ class BHCustomFieldsManager {
                     counter.text(newCount);
                     addButton.prop('disabled', false);
                 });
+
+                // --- Autocomplete para campos related ---
+                var bhcfAjaxUrl = '" . admin_url('admin-ajax.php') . "';
+                var bhcfDebounceTimer = null;
+
+                $(document).on('input', '.bhcf-autocomplete-text', function() {
+                    var input     = $(this);
+                    var wrapper   = input.closest('.bhcf-autocomplete-wrapper');
+                    var idField   = wrapper.find('.bhcf-autocomplete-id');
+                    var dropdown  = wrapper.find('.bhcf-autocomplete-dropdown');
+                    var relType   = wrapper.data('related-type');
+                    var q         = input.val().trim();
+
+                    // Si el texto cambia, limpiar el ID guardado
+                    idField.val(q);
+
+                    clearTimeout(bhcfDebounceTimer);
+
+                    if (q.length < 1) {
+                        dropdown.hide().empty();
+                        idField.val('');
+                        return;
+                    }
+
+                    bhcfDebounceTimer = setTimeout(function() {
+                        $.get(bhcfAjaxUrl, {
+                            action: 'bhcf_search_related',
+                            related_type: relType,
+                            q: q
+                        }, function(response) {
+                            dropdown.empty();
+                            if (!response.success || response.data.length === 0) {
+                                dropdown.hide();
+                                return;
+                            }
+                            response.data.forEach(function(item) {
+                                var li = $('<div>')
+                                    .text(item.title)
+                                    .css({padding: '6px 10px', cursor: 'pointer'})
+                                    .on('mouseenter', function() { $(this).css('background', '#f0f0f0'); })
+                                    .on('mouseleave', function() { $(this).css('background', ''); })
+                                    .on('mousedown', function(e) {
+                                        e.preventDefault();
+                                        input.val(item.title);
+                                        idField.val(item.id);
+                                        dropdown.hide().empty();
+                                    });
+                                dropdown.append(li);
+                            });
+                            dropdown.show();
+                        });
+                    }, 250);
+                });
+
+                $(document).on('blur', '.bhcf-autocomplete-text', function() {
+                    var input    = $(this);
+                    var wrapper  = input.closest('.bhcf-autocomplete-wrapper');
+                    var dropdown = wrapper.find('.bhcf-autocomplete-dropdown');
+                    setTimeout(function() { dropdown.hide(); }, 150);
+                });
+
             });
         ");
     }

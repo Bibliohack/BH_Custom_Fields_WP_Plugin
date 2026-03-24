@@ -28,7 +28,9 @@ if (!current_user_can('edit_post', $post_id)) return;
 | `text` html | `wp_kses_post()` (permite HTML seguro) |
 | `bool` | `(bool) $value` — guarda `false` explícitamente si no está marcado |
 | `choice` | `sanitize_text_field()` (o `array_map` para selección múltiple) |
-| `related` | `sanitize_text_field()` (guarda el ID numérico) |
+| `related` (select) | `sanitize_text_field()` (guarda el ID numérico) |
+| `related` (autocomplete, post existente) | `sanitize_text_field()` (guarda el ID numérico) |
+| `related` (autocomplete, texto nuevo) | `wp_insert_post()` crea el post → guarda el ID generado |
 | `media` | `sanitize_text_field()` (guarda el ID numérico) |
 
 ### 4. Almacenamiento en `wp_postmeta`
