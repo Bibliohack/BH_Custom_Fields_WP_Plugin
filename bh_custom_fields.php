@@ -1518,6 +1518,17 @@ class BHCustomFieldsManager {
                                     $cleaned_values[] = (bool) $value;
                                 } elseif ($field['type'] === 'choice') {
                                     $cleaned_values[] = sanitize_text_field($value);
+                                } elseif ($field['type'] === 'related' && !is_numeric($value)) {
+                                    $title = sanitize_text_field($value);
+                                    $related_type = $field['related_type'] ?? 'post';
+                                    $new_id = wp_insert_post([
+                                        'post_title'  => $title,
+                                        'post_type'   => $related_type,
+                                        'post_status' => 'publish',
+                                    ]);
+                                    if (!is_wp_error($new_id)) {
+                                        $cleaned_values[] = $new_id;
+                                    }
                                 } else {
                                     $cleaned_values[] = sanitize_text_field($value);
                                 }
