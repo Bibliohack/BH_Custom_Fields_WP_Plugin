@@ -1566,7 +1566,7 @@ class BHCustomFieldsManager {
                     }
                 } else {
                     if ($field['type'] === 'bool' && !$is_multiple) {
-                        update_post_meta($post_id, $field_id, false);
+                        update_post_meta($post_id, $field_id, '0');
                     } else {
                         delete_post_meta($post_id, $field_id);
                     }
