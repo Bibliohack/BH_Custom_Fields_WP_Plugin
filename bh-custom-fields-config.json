@@ -43,6 +43,13 @@
             }
         },
         {
+            "id": "large_title",
+            "label": "Titulo largo",
+            "type": "bool",
+            "checkbox_label": "El título es largo, reducir tamaño",
+            "default": false
+        },
+        {
             "id": "capitular",
             "label": "Capitular",
             "type": "bool",
