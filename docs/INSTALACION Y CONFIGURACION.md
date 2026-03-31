@@ -42,9 +42,12 @@ El archivo `bh-custom-fields-config.json` define todos los campos. Está organiz
   "id": "nombre_campo",
   "label": "Etiqueta visible",
   "type": "tipo_campo",
-  "description": "Descripción opcional"
+  "description": "Descripción opcional",
+  "default": "valor_por_defecto"
 }
 ```
+
+- `default`: opcional. Valor que se muestra en el editor cuando el campo nunca fue guardado (post nuevo o campo agregado a un post existente). Soportado en todos los tipos excepto campos múltiples.
 
 ---
 
@@ -60,8 +63,10 @@ El archivo `bh-custom-fields-config.json` define todos los campos. Está organiz
 ### bool
 ```json
 { "id": "destacado", "label": "Destacado", "type": "bool", "checkbox_label": "Marcar como destacado" }
+{ "id": "capitular", "label": "Capitular", "type": "bool", "checkbox_label": "Mostrar capitular", "default": true }
 ```
 - `checkbox_label`: texto junto al checkbox
+- `default`: valor inicial para posts nuevos o que nunca guardaron este campo (`true` o `false`). Una vez que el editor guarda el post, el valor explícito prevalece.
 
 ### choice
 ```json

@@ -1216,6 +1216,9 @@ class BHCustomFieldsManager {
                 $this->render_multiple_field($field, $value, $post->ID);
             } else {
                 $value = get_post_meta($post->ID, $field['id'], true);
+                if ($value === '' && !metadata_exists('post', $post->ID, $field['id']) && array_key_exists('default', $field)) {
+                    $value = $field['default'];
+                }
                 $this->render_field($field, $value, $post->ID);
             }
         }

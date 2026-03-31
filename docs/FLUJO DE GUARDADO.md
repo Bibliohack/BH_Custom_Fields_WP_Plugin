@@ -26,7 +26,7 @@ if (!current_user_can('edit_post', $post_id)) return;
 |------|-------------|
 | `text` plain | `sanitize_text_field()` |
 | `text` html | `wp_kses_post()` (permite HTML seguro) |
-| `bool` | `(bool) $value` — guarda `false` explícitamente si no está marcado |
+| `bool` | `(bool) $value` — guarda `'0'` (string) explícitamente si no está marcado |
 | `choice` | `sanitize_text_field()` (o `array_map` para selección múltiple) |
 | `related` (select) | `sanitize_text_field()` (guarda el ID numérico) |
 | `related` (autocomplete, post existente) | `sanitize_text_field()` (guarda el ID numérico) |

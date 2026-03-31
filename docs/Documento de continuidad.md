@@ -58,6 +58,7 @@ MODO SINCRONIZACIÓN (admin detecta cambios en JSON)
 | Campo nuevo | ✅ Seguro | Se aplica con "Actualizar configuración" |
 | Cambio de label/description | ✅ Seguro | Se aplica con "Actualizar configuración" |
 | Opciones agregadas (choice) | ✅ Seguro | Se aplica con "Actualizar configuración" |
+| Cambio de otras propiedades (display, mode, default, etc.) | ✅ Seguro | Se aplica con "Actualizar configuración" |
 | Campo eliminado | ⚠️ Conflicto | Advertir, ofrecer eliminar datos |
 | Cambio de tipo | ⚠️ Conflicto | Campo desactivado hasta resolver |
 | Opción eliminada con datos | ⚠️ Conflicto | Advertir, ofrecer eliminar datos |

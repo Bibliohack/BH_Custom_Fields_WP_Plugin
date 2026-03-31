@@ -47,7 +47,8 @@
             "label": "Capitular",
             "type": "bool",
             "checkbox_label": "Mostrar capitular en el primer párrafo",
-            "description": "Si está activado, el primer párrafo del artículo tendrá letra capitular"
+            "description": "Si está activado, el primer párrafo del artículo tendrá letra capitular",
+            "default": true
         }
     ],
     "revista": [
