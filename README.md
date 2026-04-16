@@ -26,13 +26,21 @@ Plugin de WordPress para gestión de campos personalizados mediante configuraci�
 cp -r bh-custom-fields /var/www/html/web/app/plugins/
 ```
 
-2. Activar el plugin desde el panel de administración o con WP-CLI:
+2. Crear el archivo de configuración a partir del ejemplo incluido:
+
+```bash
+cp bh-custom-fields-config.example.json bh-custom-fields-config.json
+```
+
+Editar `bh-custom-fields-config.json` para definir los campos del proyecto.
+
+3. Activar el plugin desde el panel de administración o con WP-CLI:
 
 ```bash
 wp plugin activate bh-custom-fields
 ```
 
-3. En la primera activación, el plugin copia automáticamente el JSON a la base de datos. No requiere configuración adicional.
+4. En la primera activación, el plugin copia automáticamente el JSON a la base de datos.
 
 ## Configuración
 
@@ -82,7 +90,7 @@ $post = bhack_get_custom_field_related('post_relacionado');
 
 ## Desinstalación
 
-Al desinstalar el plugin desde el panel de WordPress se eliminan automáticamente todas las opciones de configuración en la base de datos y los post meta de los campos registrados.
+Al desinstalar el plugin desde el panel de WordPress se eliminan automáticamente todas las opciones de configuración en la base de datos. Los post meta (datos guardados en los posts) se eliminan **solo si** está activada la opción "Eliminar todos los datos guardados" en la página Fields Sync. Por defecto esta opción está desactivada para evitar pérdida de datos accidental.
 
 ## Documentación
 

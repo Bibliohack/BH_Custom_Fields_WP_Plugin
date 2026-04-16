@@ -6,13 +6,22 @@
 
 ```bash
 # WordPress estándar:
-cp bh_custom_fields.php bh-custom-fields-config.json /path/to/wp-content/plugins/bh-custom-fields/
+cp bh_custom_fields.php bh-custom-fields-config.example.json /path/to/wp-content/plugins/bh-custom-fields/
 
 # WordPress Bedrock:
-cp bh_custom_fields.php bh-custom-fields-config.json /path/to/app/plugins/bh-custom-fields/
+cp bh_custom_fields.php bh-custom-fields-config.example.json /path/to/app/plugins/bh-custom-fields/
 ```
 
-### 2. Activar el plugin
+### 2. Crear el archivo de configuración
+
+```bash
+cd /path/to/plugins/bh-custom-fields/
+cp bh-custom-fields-config.example.json bh-custom-fields-config.json
+```
+
+Editar `bh-custom-fields-config.json` para definir los campos del proyecto. Este archivo es específico de cada instalación y no debe versionarse junto al plugin.
+
+### 3. Activar el plugin
 
 ```bash
 wp --path=/path/to/wordpress plugin activate bh-custom-fields
@@ -20,9 +29,9 @@ wp --path=/path/to/wordpress plugin activate bh-custom-fields
 
 O desde el panel: **Plugins > Plugins instalados > BH Custom Fields > Activar**
 
-### 3. Primera activación
+### 4. Primera activación
 
-Al activar, el plugin copia automáticamente el JSON a la base de datos (`bh_fields_current`) y guarda el hash MD5 del archivo. No requiere configuración adicional.
+Al activar, el plugin copia automáticamente el JSON a la base de datos (`bh_fields_current`) y guarda el hash MD5 del archivo.
 
 ---
 
@@ -229,7 +238,7 @@ Todas las funciones soportan campos simples y múltiples automáticamente.
 ## ✅ Checklist de instalación
 
 - [ ] Archivos copiados a `/wp-content/plugins/bh-custom-fields/` (o `/app/plugins/` en Bedrock)
+- [ ] `bh-custom-fields-config.json` creado a partir del `.example` y configurado
 - [ ] Plugin activado
-- [ ] JSON configurado y validado
 - [ ] Campos visibles al editar posts/páginas
 - [ ] Página "Fields Sync" muestra "Configuración sincronizada"
