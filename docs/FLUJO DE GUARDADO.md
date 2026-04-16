@@ -99,7 +99,7 @@ BD config vs JSON config
     update_option('bh_json_hash', md5_file($json_file))
     update_option('bh_last_sync', now)
     update_option('bh_fields_disabled', [])
-    update_option('bhcf_fields_force_enabled', [])
+    update_option('bh_fields_force_enabled', [])
 ```
 
 ---
@@ -119,11 +119,11 @@ meta_id | post_id | meta_key         | meta_value
 ```
 option_name                  | option_value
 -----------------------------|------------------------------------------
-bh_fields_current    | a:3:{s:4:"post";a:6:{...}}  (serializado)
-bh_json_hash         | a1057212a24b773362acab81e8e855a3
-bh_last_sync         | 2026-03-16 09:42:58
-bh_fields_disabled   | a:0:{}  (vacío si no hay conflictos)
-bhcf_fields_force_enabled    | a:0:{}
+bh_fields_current         | a:3:{s:4:"post";a:6:{...}}  (serializado)
+bh_json_hash              | a1057212a24b773362acab81e8e855a3
+bh_last_sync              | 2026-03-16 09:42:58
+bh_fields_disabled        | a:0:{}  (vacío si no hay conflictos)
+bh_fields_force_enabled   | a:0:{}
 ```
 
 No se crean tablas adicionales. El plugin usa exclusivamente la infraestructura nativa de WordPress.
@@ -155,3 +155,25 @@ wp --path=/var/www/html/web/wp --allow-root option get bh_fields_current
 wp --path=/var/www/html/web/wp --allow-root option get bh_json_hash
 wp --path=/var/www/html/web/wp --allow-root option get bh_last_sync
 ```
+
+---
+
+## 🧪 Checklist de pruebas
+
+### Flujo básico
+- [ ] Editar JSON → notice amarilla aparece en el admin
+- [ ] Ir a Fields Sync → análisis muestra los cambios correctamente
+- [ ] Aplicar (sin conflictos) → notice desaparece, sync page muestra "sincronizado"
+
+### Conflictos
+- [ ] Eliminar campo del JSON → detecta `field_deleted` con conteo de posts afectados
+- [ ] Cambiar type de campo → detecta `type_changed`, campo desactivado en el editor
+- [ ] Eliminar opción de choice con datos → detecta `option_removed` con conteo
+
+### Acciones de resolución
+- [ ] Ver posts → muestra lista correcta
+- [ ] Exportar datos → descarga CSV
+- [ ] Eliminar datos (pocos posts) → funciona sin barra de progreso
+- [ ] Eliminar datos (muchos posts) → batch con barra de progreso
+- [ ] Forzar activación → campo se reactiva en el editor
+- [ ] Ver config anterior → modal con JSON de BD

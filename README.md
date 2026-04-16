@@ -96,7 +96,6 @@ Al desinstalar el plugin desde el panel de WordPress se eliminan automáticament
 
 - [Instalación y configuración](docs/INSTALACION%20Y%20CONFIGURACION.md)
 - [Flujo de guardado y arquitectura de datos](docs/FLUJO%20DE%20GUARDADO.md)
-- [Documento de continuidad](docs/Documento%20de%20continuidad.md)
 
 ## Licencia
 
