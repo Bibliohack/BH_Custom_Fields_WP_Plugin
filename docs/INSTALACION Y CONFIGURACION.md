@@ -5,14 +5,17 @@
 ### 1. Copiar archivos al servidor
 
 ```bash
-mkdir /var/www/html/web/app/plugins/bh-custom-fields
-cp bh_custom_fields.php bh-custom-fields-config.json /var/www/html/web/app/plugins/bh-custom-fields/
+# WordPress estándar:
+cp bh_custom_fields.php bh-custom-fields-config.json /path/to/wp-content/plugins/bh-custom-fields/
+
+# WordPress Bedrock:
+cp bh_custom_fields.php bh-custom-fields-config.json /path/to/app/plugins/bh-custom-fields/
 ```
 
 ### 2. Activar el plugin
 
 ```bash
-wp --path=/var/www/html/web/wp --allow-root plugin activate bh-custom-fields
+wp --path=/path/to/wordpress plugin activate bh-custom-fields
 ```
 
 O desde el panel: **Plugins > Plugins instalados > BH Custom Fields > Activar**

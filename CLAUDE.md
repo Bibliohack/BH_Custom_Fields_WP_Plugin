@@ -12,20 +12,15 @@ Plugin de WordPress para gestionar campos personalizados (meta boxes) mediante u
 
 ## Entorno de desarrollo
 
-- **WordPress:** instalación Bedrock en `/var/www/html/web/`
-  - Core WP: `/var/www/html/web/wp/`
-  - Plugins: `/var/www/html/web/app/plugins/`
-- **Plugin desplegado:** `/var/www/html/web/app/plugins/bh-custom-fields/`
-- **URL admin:** `http://defrentealfuturo.com/wp/wp-admin`
-- **Credenciales:** admin / admin123
-- **WP-CLI:** `wp --path=/var/www/html/web/wp --allow-root`
+- **WordPress estándar:** `wp-content/plugins/bh-custom-fields/`
+- **WordPress Bedrock:** `app/plugins/bh-custom-fields/`
+- **WP-CLI:** `wp --path=/path/to/wordpress <comando>`
 
 ### Deploy
 
-El archivo desplegado requiere `sudo` para sobrescribir:
+Copiar los archivos del plugin al directorio correspondiente:
 ```bash
-sudo cp bh_custom_fields.php /var/www/html/web/app/plugins/bh-custom-fields/bh_custom_fields.php
-sudo cp bh-custom-fields-config.json /var/www/html/web/app/plugins/bh-custom-fields/bh-custom-fields-config.json
+cp bh_custom_fields.php bh-custom-fields-config.json /path/to/plugins/bh-custom-fields/
 ```
 
 ---

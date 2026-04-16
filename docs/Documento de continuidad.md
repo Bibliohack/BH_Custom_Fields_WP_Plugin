@@ -216,6 +216,4 @@ docs/
 ## 💬 Contexto de usuario
 
 - Usuarios técnicos (1-5 desarrolladores/admins)
-- Proyecto: migración ikiwiki → WordPress (De Frente al Futuro)
-- Accesos en `~/accesos.md`
-- WP-CLI: `wp --path=/var/www/html/web/wp --allow-root <comando>`
+- WP-CLI: `wp --path=/path/to/wordpress <comando>`
