@@ -1,0 +1,103 @@
+{
+    "post": [
+        {
+            "id": "subtitle",
+            "label": "Subtítulo",
+            "type": "text",
+            "mode": "plain",
+            "description": "Subtítulo breve que aparece debajo del título principal"
+        },
+        {
+            "id": "body_extended",
+            "label": "Contenido adicional",
+            "type": "text",
+            "mode": "html",
+            "description": "Bloque de contenido HTML adicional al editor principal"
+        },
+        {
+            "id": "featured",
+            "label": "Destacado",
+            "type": "bool",
+            "checkbox_label": "Marcar como contenido destacado",
+            "default": false
+        },
+        {
+            "id": "section",
+            "label": "Sección",
+            "type": "choice",
+            "display": "select",
+            "options": {
+                "news":     "Noticias",
+                "opinion":  "Opinión",
+                "culture":  "Cultura",
+                "science":  "Ciencia"
+            }
+        },
+        {
+            "id": "difficulty",
+            "label": "Nivel",
+            "type": "choice",
+            "display": "radio",
+            "options": {
+                "beginner":     "Principiante",
+                "intermediate": "Intermedio",
+                "advanced":     "Avanzado"
+            },
+            "default": "beginner"
+        },
+        {
+            "id": "tags_custom",
+            "label": "Etiquetas adicionales",
+            "type": "text",
+            "mode": "plain",
+            "multiple": true,
+            "max_items": 5,
+            "description": "Etiquetas libres separadas por campo (máximo 5)"
+        },
+        {
+            "id": "cover_image",
+            "label": "Imagen de portada",
+            "type": "media",
+            "media_type": "image"
+        },
+        {
+            "id": "attachments",
+            "label": "Documentos adjuntos",
+            "type": "media",
+            "media_type": "document",
+            "multiple": true
+        },
+        {
+            "id": "publish_date",
+            "label": "Fecha de publicación",
+            "type": "date",
+            "description": "Fecha visible al lector (puede diferir de la fecha de WordPress)"
+        },
+        {
+            "id": "related_author",
+            "label": "Autor/a",
+            "type": "related",
+            "related_type": "author",
+            "display": "autocomplete",
+            "multiple": true,
+            "description": "Relacionar con entradas del post type 'author'"
+        }
+    ],
+
+    "page": [
+        {
+            "id": "page_intro",
+            "label": "Introducción",
+            "type": "text",
+            "mode": "html",
+            "description": "Texto introductorio que aparece antes del contenido principal"
+        },
+        {
+            "id": "show_in_menu",
+            "label": "Visibilidad en menú",
+            "type": "bool",
+            "checkbox_label": "Mostrar esta página en el menú de navegación",
+            "default": true
+        }
+    ]
+}

@@ -1,6 +1,9 @@
 # WordPress
 *.log
 
+# Project-specific config (copy from bh-custom-fields-config.example.json)
+bh-custom-fields-config.json
+
 # OS
 .DS_Store
 Thumbs.db
